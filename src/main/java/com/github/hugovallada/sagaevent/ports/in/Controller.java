@@ -1,21 +1,24 @@
 package com.github.hugovallada.sagaevent.ports.in;
 
+import com.github.hugovallada.sagaevent.dto.Payload;
 import com.github.hugovallada.sagaevent.entity.Event;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/teste")
+@RequiredArgsConstructor
 public class Controller {
-
-    @Autowired
-    private CreateProposalUseCase createProposalUseCase;
+    
+    private final CreateProposalUseCase createProposalUseCase;
 
     @GetMapping
-    void startFluxo() {
-        createProposalUseCase.execute("ola", Event.DOCUMENT);
+    ResponseEntity<Payload> startFluxo() {
+        var response = createProposalUseCase.execute("ola", Event.DOCUMENT);
+        return ResponseEntity.status(response.statusCode()).body(response.message());
     }
 
 }

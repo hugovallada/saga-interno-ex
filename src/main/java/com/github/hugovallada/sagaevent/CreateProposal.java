@@ -1,6 +1,9 @@
 package com.github.hugovallada.sagaevent;
 
+import com.github.hugovallada.sagaevent.dto.EventStatus;
+import com.github.hugovallada.sagaevent.dto.Payload;
 import com.github.hugovallada.sagaevent.entity.Event;
+import com.github.hugovallada.sagaevent.errors.GetDocumentException;
 import com.github.hugovallada.sagaevent.handler.CreateProposalEventHandler;
 import com.github.hugovallada.sagaevent.ports.in.CreateProposalUseCase;
 import com.github.hugovallada.sagaevent.ports.out.Document;
@@ -20,10 +23,26 @@ class CreateProposal implements CreateProposalUseCase {
         this.handler = handler;
     }
 
-    public void execute(String message, Event initialEvent) {
+    public EventStatus execute(String message, Event initialEvent) {
         if (Objects.isNull(initialEvent)) {
             initialEvent = Event.INITIAL;
         }
-        handler.execute(message, initialEvent);
+        try {
+            handler.execute(message, initialEvent);
+            return new EventStatus(201, Payload.builder()
+                    .data("Sucesso")
+                    .desc("Request com sucesso")
+                    .build());
+        } catch (GetDocumentException ex) {
+            return new EventStatus(400, Payload.builder()
+                    .data("Falha")
+                    .desc("Chamada com falha")
+                    .build());
+        } catch (Exception ex) {
+            return new EventStatus(500, Payload.builder()
+                    .data("Falha interna")
+                    .build()
+            );
+        }
     }
 }

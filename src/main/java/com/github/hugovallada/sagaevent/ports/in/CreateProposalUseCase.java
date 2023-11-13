@@ -1,7 +1,8 @@
 package com.github.hugovallada.sagaevent.ports.in;
 
+import com.github.hugovallada.sagaevent.dto.EventStatus;
 import com.github.hugovallada.sagaevent.entity.Event;
 
 public interface CreateProposalUseCase {
-    void execute(String message, Event event);
+    EventStatus execute(String message, Event event);
 }

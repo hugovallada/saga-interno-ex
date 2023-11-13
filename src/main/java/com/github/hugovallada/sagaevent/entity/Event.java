@@ -10,6 +10,4 @@ public enum Event {
     public Event next() {
         return Event.values()[this.ordinal() + 1];
     }
-
-
 }
